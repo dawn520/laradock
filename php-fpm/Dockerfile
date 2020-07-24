@@ -256,13 +256,22 @@ ARG INSTALL_PHPREDIS=false
 
 RUN if [ ${INSTALL_PHPREDIS} = true ]; then \
     # Install Php Redis Extension
-    if [ $(php -r "echo PHP_MAJOR_VERSION;") = "5" ]; then \
-      pecl install -o -f redis-4.3.0; \
-    else \
-      pecl install -o -f redis; \
-    fi \
-    && rm -rf /tmp/pear \
-    && docker-php-ext-enable redis \
+    #if [ $(php -r "echo PHP_MAJOR_VERSION;") = "6" ]; then \
+    #  pecl install -o -f redis-4.3.0; \
+    #else \
+    #  pecl install -o -f redis; \
+    #fi \
+    #&& rm -rf /tmp/pear \
+    #&& docker-php-ext-enable redis \
+ 
+
+    # Install Php Redis Extension
+    # printf "\n" | pecl install -o -f redis \
+    printf "\n" | curl 'http://pecl.php.net/get/redis-4.1.1.tgz' -o redis-4.1.1.tgz \
+    && pecl install redis-4.1.1.tgz \
+    &&  rm -rf redis-4.1.1.tgz \
+    &&  rm -rf /tmp/pear \
+    &&  docker-php-ext-enable redis \
 ;fi
 
 ###########################################################################
@@ -273,17 +282,28 @@ ARG INSTALL_SWOOLE=false
 
 RUN if [ ${INSTALL_SWOOLE} = true ]; then \
     # Install Php Swoole Extension
-    if [ $(php -r "echo PHP_MAJOR_VERSION;") = "5" ]; then \
-      pecl install swoole-2.0.10; \
-    else \
-      if [ $(php -r "echo PHP_MINOR_VERSION;") = "0" ]; then \
-        pecl install swoole-2.2.0; \
-      else \
-        pecl install swoole; \
-      fi \
-    fi && \
-    docker-php-ext-enable swoole \
-    && php -m | grep -q 'swoole' \
+    #if [ $(php -r "echo PHP_MAJOR_VERSION;") = "5" ]; then \
+     # pecl install swoole-2.0.10; \
+    #else \
+     # if [ $(php -r "echo PHP_MINOR_VERSION;") = "0" ]; then \
+      #  pecl install swoole-2.2.0; \
+     # else \
+      #  pecl install swoole; \
+     # fi \
+   # fi && \
+   # docker-php-ext-enable swoole \
+   # && php -m | grep -q 'swoole' \
+
+
+# Install Php Redis Extension
+    # printf "\n" | pecl install -o -f redis \
+    printf "\n" | curl 'http://pecl.php.net/get/swoole-4.5.2.tgz' -o swoole-4.5.2.tgz \
+    && pecl install swoole-4.5.2.tgz \
+    &&  rm -rf swoole-4.5.2.tgz \
+    &&  rm -rf /tmp/pear \
+    &&  docker-php-ext-enable swoole \
+
+
 ;fi
 
 ###########################################################################
@@ -308,13 +328,23 @@ RUN if [ ${INSTALL_TAINT} = true ]; then \
 ARG INSTALL_MONGO=false
 
 RUN if [ ${INSTALL_MONGO} = true ]; then \
-    # Install the mongodb extension
-    if [ $(php -r "echo PHP_MAJOR_VERSION;") = "5" ]; then \
-      pecl install mongo && \
-      docker-php-ext-enable mongo \
-    ;fi && \
-    pecl install mongodb && \
-    docker-php-ext-enable mongodb \
+#    # Install the mongodb extension
+#    if [ $(php -r "echo PHP_MAJOR_VERSION;") = "5" ]; then \
+#      pecl install mongo && \
+#      docker-php-ext-enable mongo \
+#    ;fi && \
+#    pecl install mongodb && \
+#    docker-php-ext-enable mongodb \
+
+
+ # Install Php mongodb Extension
+    # printf "\n" | pecl install -o -f mongodb \
+    printf "\n" | curl 'http://pecl.php.net/get/mongodb-1.7.5.tgz' -o mongodb-1.7.5.tgz \
+    && pecl install mongodb-1.7.5.tgz \
+    &&  rm -rf mongodb-1.7.5.tgz \
+    &&  rm -rf /tmp/pear \
+    &&  docker-php-ext-enable mongodb \
+
 ;fi
 
 ###########################################################################
